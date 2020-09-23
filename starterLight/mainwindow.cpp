@@ -6,116 +6,12 @@
 /* **** début de la partie à compléter **** */
 float MainWindow::faceArea(MyMesh* _mesh, int faceID)
 {
-    float *x = new float[3];
-    float *y = new float[3];
-    float *z = new float[3];
-    int cmpt=0;
-
-    float area;
-
-    FaceHandle *f = new FaceHandle(faceID);
-
-    /* recup les (x,y) des points A, B et C de la face*/
-    for(MyMesh::FaceVertexIter curVert = _mesh->fv_iter(*f); curVert.is_valid(); curVert++){
-
-        VertexHandle vh = *curVert;
-        x[cmpt] = _mesh->point(vh)[0];
-        //qDebug() << "x : " << x[cmpt];
-        y[cmpt] = _mesh->point(vh)[1];
-        //qDebug() << "y : " << y[cmpt];
-        z[cmpt] = _mesh->point(vh)[2];
-        //qDebug() << "z : " << z[cmpt];
-        cmpt++;
-        //qDebug() << "cmpt : " << cmpt;
-    }
-
-    float det1, det2, det3;
-
-    det1 = x[0]*(y[1] - y[2]) + x[1]*(y[0] - y[2]) + x[2]*(y[0] - y[1]);
-     //qDebug() << "det1 = " << det1;
-    det2 = y[0]*(z[1] - z[2]) + y[1]*(z[0] - z[2]) + y[2]*(z[0] - z[1]);
-     //qDebug() << "det2 = " << det2;
-    det3 = z[0]*(x[1] - x[2]) + z[1]*(x[0] - x[2]) + z[2]*(x[0] - x[1]);
-     //qDebug() << "det3 = " << det3;
-
-    float detsCarre = det1*det1 + det2*det2 + det3*det3;
-    //qDebug() << "detsCarre = " << detsCarre;
-
-    area = (sqrt(detsCarre))/2;
-    //qDebug() << "area = " << area;
-
-    return area;
-}
-
-float MainWindow::angleFF(MyMesh* _mesh, int faceID0,  int faceID1, int vertID0, int vertID1)
-{
-    float angle;
-
-    MyMesh::FaceHandle *f0 = new FaceHandle(faceID0);
-    MyMesh::FaceHandle *f1 = new FaceHandle(faceID1);
-
-
-    VertexHandle P = _mesh->vertex_handle(vertID0);
-    VertexHandle opP = _mesh->vertex_handle(vertID1);
-
-    MyMesh::Normal n0 = _mesh->calc_face_normal(*f0);
-    MyMesh::Normal n1 = _mesh->calc_face_normal(*f1);
-
-
-    return angle;
+    return 0;
 }
 
 float MainWindow::angleEE(MyMesh* _mesh, int vertexID,  int faceID)
 {
-
-    //Seulement besoin des deux points opposé a celui qu'on donne en entre de la fonction.
-        float *x = new float[2];
-        float *y = new float[2];
-        float *z = new float[2];
-        int cmpt=0;
-
-        MyMesh::FaceHandle *f = new FaceHandle(faceID);
-        qDebug() << "faceID :" << (*f).idx();
-
-        VertexHandle baseVertex = _mesh->vertex_handle(vertexID);
-
-        for (MyMesh::FaceVertexIter curVert = _mesh->fv_iter(*f); curVert.is_valid(); curVert ++)
-        {
-
-            VertexHandle vh = *curVert;
-
-
-            if( vh == _mesh->vertex_handle(vertexID)) continue;
-            else{
-                x[cmpt] = _mesh->point(vh)[0];
-                y[cmpt] = _mesh->point(vh)[1];
-                z[cmpt] = _mesh->point(vh)[2];
-                cmpt++;
-            }
-        }
-
-        float *v1 = new float[3];
-        float *v2 = new float[3];
-
-        v1[0] = x[0] - _mesh->point(baseVertex)[0];
-        v1[1] = y[0] - _mesh->point(baseVertex)[1];
-        v1[2] = z[0] - _mesh->point(baseVertex)[2];
-
-        v2[0] = x[1] - _mesh->point(baseVertex)[0];
-        v2[1] = y[1] - _mesh->point(baseVertex)[1];
-        v2[2] = z[1] - _mesh->point(baseVertex)[2];
-
-        float prod = 0;
-        for(int i = 0 ; i<3; i++){
-            prod += v1[i] * v2[i];
-        }
-        float norv1 = sqrt(pow(v1[0],2)+pow(v1[1],2)+pow(v1[2],2));
-        float norv2 = sqrt(pow(v2[0],2)+pow(v2[1],2)+pow(v2[2],2));
-
-        float costet = prod/(norv1*norv2);
-        float angle = acos(costet);
-
-        return abs(angle);
+    return 0;
 }
 
 void MainWindow::H_Curv(MyMesh* _mesh)
