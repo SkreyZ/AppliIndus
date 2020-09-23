@@ -6,12 +6,12 @@
 /* **** début de la partie à compléter **** */
 float MainWindow::faceArea(MyMesh* _mesh, int faceID)
 {
-    return 0;
+    return 0.0;
 }
 
 float MainWindow::angleEE(MyMesh* _mesh, int vertexID,  int faceID)
 {
-    return 0;
+    return 0.0;
 }
 
 void MainWindow::H_Curv(MyMesh* _mesh)
@@ -56,8 +56,8 @@ void MainWindow::on_pushButton_angleArea_clicked()
     qDebug() << "Aire de la face 0 :" << faceArea(&mesh, 0);
     qDebug() << "Aire de la face 1 :" << faceArea(&mesh, 1);
 
-    qDebug() << "Angle entre les faces 0 et 1 :" << angleFF(&mesh, 0, 1, 1, 2);
-    qDebug() << "Angle entre les faces 1 et 0 :" << angleFF(&mesh, 1, 0, 1, 2);
+//    qDebug() << "Angle entre les faces 0 et 1 :" << angleFF(&mesh, 0, 1, 1, 2);
+//    qDebug() << "Angle entre les faces 1 et 0 :" << angleFF(&mesh, 1, 0, 1, 2);
 
     qDebug() << "AngleEE au sommet 1 sur la face 0 :" << angleEE(&mesh, 1, 0);
     qDebug() << "AngleEE au sommet 3 sur la face 1 :" << angleEE(&mesh, 3, 1);
