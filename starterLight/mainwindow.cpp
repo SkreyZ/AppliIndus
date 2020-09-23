@@ -4,9 +4,21 @@
 
 
 /* **** début de la partie à compléter **** */
-float MainWindow::faceArea(MyMesh* _mesh, int faceID)
+void MainWindow::affiche_carac(MyMesh* _mesh){
+    qDebug() << "Nombre de sommets "<< _mesh->n_vertices();
+    qDebug() << "Nombre de faces :" << _mesh->n_faces();
+    qDebug() << "Is triangle" << _mesh->is_triangles();
+}
+
+float MainWindow::centre_gravite(MyMesh* _mesh)
 {
-    return 0.0;
+    float centreG = 0;
+
+    for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
+        _mesh->n_vertices(); // nombres de sommets.
+        _mesh->n_faces(); // nombre de faces.
+    }
+    return centreG;
 }
 
 float MainWindow::angleEE(MyMesh* _mesh, int vertexID,  int faceID)
@@ -53,8 +65,7 @@ void MainWindow::on_pushButton_K_clicked()
     AngleEE au sommet 1 sur la face 0 : 0.785398 */
 void MainWindow::on_pushButton_angleArea_clicked()
 {
-    qDebug() << "Aire de la face 0 :" << faceArea(&mesh, 0);
-    qDebug() << "Aire de la face 1 :" << faceArea(&mesh, 1);
+    qDebug() << "Le centre de gravité est :" << centre_gravite(&mesh);
 
 //    qDebug() << "Angle entre les faces 0 et 1 :" << angleFF(&mesh, 0, 1, 1, 2);
 //    qDebug() << "Angle entre les faces 1 et 0 :" << angleFF(&mesh, 1, 0, 1, 2);
@@ -78,6 +89,7 @@ void MainWindow::on_pushButton_chargement_clicked()
 
     // on affiche le maillage
     displayMesh(&mesh);
+    affiche_carac(&mesh);
 }
 /* **** fin de la partie boutons et IHM **** */
 

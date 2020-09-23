@@ -42,7 +42,9 @@ public:
     ~MainWindow();
 
     // les fonctions à compléter
-    float faceArea(MyMesh* _mesh, int faceID);
+    void affiche_carac(MyMesh* _mesh);
+    bool onlyTriangles(MyMesh* _mesh);
+    float centre_gravite(MyMesh* _mesh);
     float Ai(MyMesh*, int vertexID);
     float angleFF(MyMesh *_mesh, int faceID0, int faceID1, int vertID0, int vertID1);
     float angleEE(MyMesh* _mesh, int vertexID, int faceID);
