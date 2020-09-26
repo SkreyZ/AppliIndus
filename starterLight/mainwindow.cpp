@@ -7,33 +7,29 @@
 void MainWindow::affiche_carac(MyMesh* _mesh){
     qDebug() << "Nombre de sommets "<< _mesh->n_vertices();
     qDebug() << "Nombre de faces :" << _mesh->n_faces();
-    qDebug() << "Is triangle" << _mesh->is_triangles();
 }
 
 float MainWindow::centre_gravite(MyMesh* _mesh)
 {
-    float centreG = 0;
 
-    for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
-        _mesh->n_vertices(); // nombres de sommets.
-        _mesh->n_faces(); // nombre de faces.
-    }
-    return centreG;
+    return 0.0;
 }
 
 float MainWindow::angleEE(MyMesh* _mesh, int vertexID,  int faceID)
 {
+    centre_gravite(_mesh);
     return 0.0;
 }
 
 void MainWindow::H_Curv(MyMesh* _mesh)
 {
-    /* **** à compléter ! **** */
+    centre_gravite(_mesh);
+    displayMesh(&mesh);
 }
 
 void MainWindow::K_Curv(MyMesh* _mesh)
 {
-    /* **** à compléter ! **** */
+    centre_gravite(_mesh);
 }
 /* **** fin de la partie à compléter **** */
 
@@ -42,8 +38,9 @@ void MainWindow::K_Curv(MyMesh* _mesh)
 /* **** début de la partie boutons et IHM **** */
 void MainWindow::on_pushButton_H_clicked()
 {
-    H_Curv(&mesh);
-    displayMesh(&mesh, DisplayMode::TemperatureMap); // permet de passer en mode "carte de temperatures", avec une gestion automatique de la couleur (voir exemple)
+    centre_gravite(&mesh);
+    affiche_carac(&mesh);
+    displayMesh(&mesh);
 }
 
 void MainWindow::on_pushButton_K_clicked()
@@ -76,20 +73,32 @@ void MainWindow::on_pushButton_angleArea_clicked()
 
 void MainWindow::on_pushButton_chargement_clicked()
 {
+    // PolyMesh
+    MyPMesh mesh2;
     // fenêtre de sélection des fichiers
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Mesh"), "", tr("Mesh Files (*.obj)"));
 
     // chargement du fichier .obj dans la variable globale "mesh"
     OpenMesh::IO::read_mesh(mesh, fileName.toUtf8().constData());
-
+    qDebug() << "Trimesh initialised with : " << "cube.obj";
     mesh.update_normals();
+    qDebug() << "Is Trimesh full of trangles : " << mesh.is_triangles();
+    qDebug() << "Nombre de sommets "<< mesh.n_vertices();
+    qDebug() << "Nombre de faces :" << mesh.n_faces();
+
+    OpenMesh::IO::read_mesh(mesh2, fileName.toUtf8().constData());
+    qDebug() << "PolyMesh initialised with : " << "cube.obj";
+    mesh2.update_normals();
+    qDebug() << "Is Polymesh full of trangles : " << mesh2.is_triangles();
+    qDebug() << "Nombre de sommets "<< mesh2.n_vertices();
+    qDebug() << "Nombre de faces :" << mesh2.n_faces();
+
 
     // initialisation des couleurs et épaisseurs (sommets et arêtes) du mesh
     resetAllColorsAndThickness(&mesh);
 
     // on affiche le maillage
     displayMesh(&mesh);
-    affiche_carac(&mesh);
 }
 /* **** fin de la partie boutons et IHM **** */
 

@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
+#include <OpenMesh/Core/Mesh/PolyMesh_ArrayKernelT.hh>
 
 namespace Ui {
 class MainWindow;
@@ -29,6 +30,7 @@ struct MyTraits : public OpenMesh::DefaultTraits
 };
 typedef OpenMesh::TriMesh_ArrayKernelT<MyTraits> MyMesh;
 
+typedef OpenMesh::PolyMesh_ArrayKernelT<> MyPMesh;
 
 enum DisplayMode {Normal, TemperatureMap, ColorShading};
 
@@ -53,6 +55,7 @@ public:
 
     void displayMesh(MyMesh *_mesh, DisplayMode mode = DisplayMode::Normal);
     void resetAllColorsAndThickness(MyMesh* _mesh);
+
 
 private slots:
 
