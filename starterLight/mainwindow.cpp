@@ -33,7 +33,89 @@ void MainWindow::K_Curv(MyMesh* _mesh)
 }
 /* **** fin de la partie à compléter **** */
 
+void MainWindow::area_frequency(MyMesh* _mesh) {
+    std::vector<MyMesh::Scalar> faces_area;
+    MyMesh::Scalar minArea = 10000;
+    MyMesh::Scalar maxArea = 0;
 
+    for (MyMesh::FaceIter curFace = _mesh->faces_begin(); curFace != _mesh->faces_end(); curFace++) {
+        FaceHandle fh = curFace;
+        HalfedgeHandle heh = _mesh->halfedge_handle(fh);
+        MyMesh::Scalar s = _mesh->calc_sector_area(heh);
+        faces_area.push_back(s);
+
+        if(minArea > s)
+            minArea = s;
+        if(maxArea < s)
+            maxArea = s;
+
+        qDebug() << s;
+    }
+}
+
+bool is_in_range(MyMesh::Scalar valueTest, MyMesh::Scalar a, MyMesh::Scalar marginOfError){
+    if(valueTest >= a - marginOfError && valueTest <= a + marginOfError)
+        return true;
+    return false;
+}
+
+void MainWindow::dihedral_angles(MyMesh *_mesh){
+    std::vector<MyMesh::Scalar> angles;
+    std::map<MyMesh::Scalar, int> frequency;
+    MyMesh::Scalar pi= 3.14159265;
+
+    //Initialisation de la map
+    int i = 0;
+    while(i <= 360){
+        frequency[i] = 0;
+        i += 10;
+    }
+
+    // On recupere la valeur des angles diedre
+    for(MyMesh::EdgeIter curEdge = _mesh->edges_begin(); curEdge != _mesh->edges_end(); curEdge++){
+        EdgeHandle eh = curEdge;
+        MyMesh::Scalar s_rad = _mesh->calc_dihedral_angle(eh);
+        MyMesh::Scalar s_deg = (s_rad*180)/pi;
+
+        angles.push_back(s_deg);
+    }
+
+    // On On enumere le nombre d'angle pour chaque tranche de 10° de 0° a 360°
+    for (int i = 0; i<=360 ; i+=10) {
+        for (int j=0; j < (int) angles.size(); j++) {
+            if(is_in_range(angles.at(j), i, marginError))
+                frequency[i]++;
+        }
+    }
+
+    for (int i = 0; i<=360 ; i+=10) {
+        qDebug() << "Nombres d'angles pour" << i <<"(degres)"<<frequency[i];
+    }
+
+
+}
+
+void MainWindow::show_vf_list(MyMesh *_mesh) {
+    std::vector<VertexHandle> vvh;
+    std::vector<VertexHandle> fv;
+    qDebug() << "Points";
+    for (MyMesh::VertexIter curVert = _mesh->vertices_begin(); curVert != _mesh->vertices_end(); curVert ++) {
+       VertexHandle vh = curVert;
+       MyMesh::Point p = _mesh->point(vh);
+       if(p.dim() == 3){
+            qDebug() << vh.idx() << ":" << p.data()[0] <<  p.data()[1] << p.data()[2];
+       }
+    }
+
+    qDebug() << "Faces";
+    for(MyMesh::FaceIter curFace = _mesh->faces_begin(); curFace != _mesh->faces_end(); curFace++){
+        for(MyMesh::FaceVertexIter curVert = _mesh->fv_iter(curFace); curVert.is_valid(); curVert++){
+            fv.push_back(curVert);
+        }
+        qDebug() << curFace->idx() << ":" << fv.at(0).idx() << fv.at(1).idx() << fv.at(2).idx();
+        fv.clear();
+    }
+}
 
 /* **** début de la partie boutons et IHM **** */
 void MainWindow::on_pushButton_H_clicked()
@@ -48,6 +130,27 @@ void MainWindow::on_pushButton_K_clicked()
     K_Curv(&mesh);
     displayMesh(&mesh, DisplayMode::TemperatureMap); // permet de passer en mode "carte de temperatures", avec une gestion automatique de la couleur (voir exemple)
 }
+
+void MainWindow::on_pushButton_AF_clicked()
+{
+   area_frequency(&mesh);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    show_vf_list(&mesh);
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    dihedral_angles(&mesh);
+}
+
+void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
+{
+    marginError = arg1;
+}
+
 
 /*  Cette fonction est à utiliser UNIQUEMENT avec le fichier testAngleArea.obj
     Elle est appelée par le bouton "Test angles/aires"
@@ -73,32 +176,18 @@ void MainWindow::on_pushButton_angleArea_clicked()
 
 void MainWindow::on_pushButton_chargement_clicked()
 {
-    // PolyMesh
-    MyPMesh mesh2;
     // fenêtre de sélection des fichiers
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Mesh"), "", tr("Mesh Files (*.obj)"));
 
     // chargement du fichier .obj dans la variable globale "mesh"
     OpenMesh::IO::read_mesh(mesh, fileName.toUtf8().constData());
-    qDebug() << "Trimesh initialised with : " << "cube.obj";
     mesh.update_normals();
-    qDebug() << "Is Trimesh full of trangles : " << mesh.is_triangles();
-    qDebug() << "Nombre de sommets "<< mesh.n_vertices();
-    qDebug() << "Nombre de faces :" << mesh.n_faces();
-
-    OpenMesh::IO::read_mesh(mesh2, fileName.toUtf8().constData());
-    qDebug() << "PolyMesh initialised with : " << "cube.obj";
-    mesh2.update_normals();
-    qDebug() << "Is Polymesh full of trangles : " << mesh2.is_triangles();
-    qDebug() << "Nombre de sommets "<< mesh2.n_vertices();
-    qDebug() << "Nombre de faces :" << mesh2.n_faces();
-
-
     // initialisation des couleurs et épaisseurs (sommets et arêtes) du mesh
     resetAllColorsAndThickness(&mesh);
 
     // on affiche le maillage
     displayMesh(&mesh);
+    affiche_carac(&mesh);
 }
 /* **** fin de la partie boutons et IHM **** */
 

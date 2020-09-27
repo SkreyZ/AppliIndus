@@ -45,6 +45,7 @@ public:
 
     // les fonctions à compléter
     void affiche_carac(MyMesh* _mesh);
+    void show_vf_list(MyMesh* _mesh);
     bool onlyTriangles(MyMesh* _mesh);
     float centre_gravite(MyMesh* _mesh);
     float Ai(MyMesh*, int vertexID);
@@ -52,6 +53,8 @@ public:
     float angleEE(MyMesh* _mesh, int vertexID, int faceID);
     void H_Curv(MyMesh* _mesh);
     void K_Curv(MyMesh* _mesh);
+    void area_frequency(MyMesh* _mesh);
+    void dihedral_angles(MyMesh* _mesh);
 
     void displayMesh(MyMesh *_mesh, DisplayMode mode = DisplayMode::Normal);
     void resetAllColorsAndThickness(MyMesh* _mesh);
@@ -63,6 +66,13 @@ private slots:
     void on_pushButton_angleArea_clicked();
     void on_pushButton_H_clicked();
     void on_pushButton_K_clicked();
+    void on_pushButton_AF_clicked();
+
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_doubleSpinBox_valueChanged(double arg1);
 
 private:
 
@@ -73,7 +83,7 @@ private:
     int vertexSelection;
     int edgeSelection;
     int faceSelection;
-
+    MyMesh::Scalar marginError;
     Ui::MainWindow *ui;
 };
 
