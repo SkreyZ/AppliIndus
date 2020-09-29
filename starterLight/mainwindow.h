@@ -82,6 +82,7 @@ private:
 
     int vertexSelection;
     int edgeSelection;
+
     int faceSelection;
     MyMesh::Scalar marginError;
     Ui::MainWindow *ui;

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <math.h>
+#include "themewidget.h"
 
 
 /* **** début de la partie à compléter **** */
@@ -74,10 +75,13 @@ void MainWindow::dihedral_angles(MyMesh *_mesh){
     // On recupere la valeur des angles diedre
     for(MyMesh::EdgeIter curEdge = _mesh->edges_begin(); curEdge != _mesh->edges_end(); curEdge++){
         EdgeHandle eh = curEdge;
-        MyMesh::Scalar s_rad = _mesh->calc_dihedral_angle(eh);
-        MyMesh::Scalar s_deg = (s_rad*180)/pi;
+        if(!_mesh->is_boundary(eh)){
+            MyMesh::Scalar s_rad = _mesh->calc_dihedral_angle(eh);
+            MyMesh::Scalar s_deg = (s_rad*180)/pi;
+            angles.push_back(s_deg);
+        }
 
-        angles.push_back(s_deg);
+
     }
 
     // On On enumere le nombre d'angle pour chaque tranche de 10° de 0° a 360°
@@ -143,12 +147,16 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    dihedral_angles(&mesh);
+    ThemeWidget *widget = new ThemeWidget();
+    widget->show();
+    //dihedral_angles(&mesh);
 }
 
 void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
 {
     marginError = arg1;
+    QWidget *wdg = new QWidget;
+    wdg->show();
 }
 
 

@@ -6,7 +6,8 @@
 
 QT       += core gui
 QT       += opengl
-
+QT       += charts
+requires(qtConfig(combobox))
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = starterLight
@@ -41,13 +42,19 @@ macx: {
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    meshviewerwidget.cpp
+    meshviewerwidget.cpp \
+    themewidget.cpp
 
 HEADERS += \
         mainwindow.h \
-    meshviewerwidget.h
+    meshviewerwidget.h \
+    themewidget.h
+
+target.path = $$[QT_INSTALL_EXAMPLES]/charts/chartthemes
+INSTALLS += target
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        themewidget.ui
 
 
