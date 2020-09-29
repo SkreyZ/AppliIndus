@@ -10,17 +10,6 @@ void MainWindow::get_carac(MyMesh* _mesh){
     qDebug() << "Is triangle" << _mesh->is_triangles();
 }
 
-float MainWindow::donnee_mesh(MyMesh* _mesh)
-{
-    float centreG = 0;
-
-    for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
-        _mesh->n_vertices(); // nombres de sommets.
-        _mesh->n_faces(); // nombre de faces.
-    }
-    return centreG;
-}
-
 bool MainWindow::test_lonely_face(MyMesh* _mesh){
     bool face_seule = true;
 
@@ -121,23 +110,22 @@ void MainWindow::ecart_angulaire(MyMesh* _mesh){
 
 /* **** début de la partie boutons et IHM **** */
 void MainWindow::on_pushButton_Affiche_Carac_clicked(){
-   qDebug() << __FUNCTION__;
+//   qDebug() << __FUNCTION__;
    get_carac(&mesh);
-   qDebug() << "Affiche Caractéristiques clicked";
 }
 
 void MainWindow::on_pushButton_normales_faces_clicked(){
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
     print_faces_norm(&mesh);
 }
 
 void MainWindow::on_pushButton_normales_points_clicked(){
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
     print_vertices_norm(&mesh);
 }
 
 void MainWindow::on_pushButton_seuls_clicked(){
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
     qDebug() << "Face seule : " << test_lonely_face(&mesh);
     qDebug() << "Point seul : " << test_lonely_vertex(&mesh);
     qDebug() << "Arete seule : " << test_lonely_edge(&mesh);

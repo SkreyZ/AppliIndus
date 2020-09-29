@@ -47,7 +47,6 @@ public:
     bool test_lonely_face(MyMesh* _mesh);
     bool test_lonely_vertex(MyMesh* _mesh);
     bool test_lonely_edge(MyMesh* _mesh);
-    float donnee_mesh(MyMesh* _mesh);
     MyMesh::Normal face_norm(MyMesh* _mesh, MyMesh::FaceHandle face);
     std::vector<float> vertex_norm(MyMesh* _mesh, MyMesh::VertexHandle vertex, std::vector<float>* normale);
     void print_vertices_norm(MyMesh* _mesh);
