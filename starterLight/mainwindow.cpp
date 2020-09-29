@@ -54,49 +54,50 @@ void MainWindow::print_faces_norm(MyMesh *_mesh){
     }
 }
 
-std::vector<float> MainWindow::vertex_norm(MyMesh *_mesh, MyMesh::VertexHandle vertex, std::vector<float>* normale){
+MyMesh::Normal MainWindow::vertex_norm(MyMesh *_mesh, MyMesh::VertexHandle vertex){
     int i=0;
-
-    float *norm = new float[3];
-    norm[0] = 0; norm[1] = 0; norm[2] = 0;
+    MyMesh::Normal normale;
 
     for(MyMesh::VertexFaceIter vf_it = _mesh->vf_iter(vertex); vf_it.is_valid(); ++vf_it){
         i++;
         FaceHandle face = *vf_it;
         MyMesh::Normal normal = face_norm(_mesh, face);
-        norm[0] += normal[0]; norm[1] += normal[1]; norm[2] += normal[2];
+        normale[0] += normal[0]; normale[1] += normal[1]; normale[2] += normal[2];
     }
-    norm[0] /= i; norm[1] /= i; norm[2] /= i;
-
-    for(int i = 0; i<3 ; ++i){
-        normale->push_back(norm[0]);
-    }
-
-    return *normale;
+    normale[0] /= i; normale[1] /= i; normale[2] /= i;
+    return normale;
 }
 
 void MainWindow::print_vertices_norm(MyMesh *_mesh){
-    std::vector<float> norm;
+    MyMesh::Normal normale;
     for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
-        vertex_norm(_mesh, *v_it, &norm);
-        qDebug() << "Normale point n°" << v_it->idx() << " : " << norm[0] << "," << norm[1] << "," << norm[2];
+        normale = vertex_norm(_mesh, *v_it);
+        qDebug() << "Normale point n°" << v_it->idx() << " : " << normale[0] << "," << normale[1] << "," << normale[2];
     }
 }
 
 void MainWindow::ecart_angulaire(MyMesh* _mesh){
-    std::vector<float> vertex_normale;
-    MyMesh::Normal face_normale;
-
+    MyMesh::Normal vertex_normal;
+    MyMesh::Normal face_normal;
+    float current_angle = 0;
 
     for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
-        vertex_norm(_mesh, *v_it, &vertex_normale);
+        current_angle = 0;
+        vertex_normal = vertex_norm(_mesh, *v_it);
         for(MyMesh::VertexFaceIter vf_it = _mesh->vf_iter(*v_it); vf_it.is_valid(); ++vf_it){
-            face_normale = face_norm(_mesh, *vf_it);
+            face_normal = face_norm(_mesh, *vf_it);
 
             //Comparer ici la normale du vertex et celles des faces autours.
+            //Calculer les angles entres la normale du points et de toutes ses faces adjacentes ==> mémoriser l'angle le plus grand parmi tous.
+            float norm_Vertex_Normal = sqrt(pow(vertex_normal[0],2) + pow(vertex_normal[1],2) + pow(vertex_normal[2],2));
+            float norm_Face_Normal = sqrt(pow(face_normal[0],2) + pow(face_normal[1],2) + pow(face_normal[2],2));
+            float prod_scalaire = dot(vertex_normal,face_normal);
 
-
+            /*u.v = ||u|| . ||v|| . cos(alpha)*/
+            float new_angle = acos(prod_scalaire/(norm_Vertex_Normal*norm_Face_Normal));
+            if(new_angle > current_angle) current_angle = new_angle;
         }
+        _mesh->data(*v_it).value = current_angle;
     }
 }
 
@@ -160,6 +161,11 @@ void MainWindow::on_pushButton_seuls_clicked(){
     qDebug() << "Face seule : " << test_lonely_face(&mesh) << ": il y a : " << nb_faces_isole(&mesh) << " faces seules";
     qDebug() << "Point seul : " << test_lonely_vertex(&mesh) << ": il y a : " << nb_points_isole(&mesh) << " points seuls";
     qDebug() << "Arete seule : " << test_lonely_edge(&mesh) << ": il y a : " << nb_aretes_isole(&mesh) << " aretes seules";
+}
+
+void MainWindow::on_pushButton_ecart_angulaire_clicked(){
+    ecart_angulaire(&mesh);
+    displayMesh(&mesh, DisplayMode::TemperatureMap);
 }
 
 void MainWindow::on_pushButton_H_clicked()

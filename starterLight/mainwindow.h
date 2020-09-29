@@ -48,7 +48,7 @@ public:
     bool test_lonely_vertex(MyMesh* _mesh);
     bool test_lonely_edge(MyMesh* _mesh);
     MyMesh::Normal face_norm(MyMesh* _mesh, MyMesh::FaceHandle face);
-    std::vector<float> vertex_norm(MyMesh* _mesh, MyMesh::VertexHandle vertex, std::vector<float>* normale);
+    MyMesh::Normal vertex_norm(MyMesh* _mesh, MyMesh::VertexHandle vertex);
     void print_vertices_norm(MyMesh* _mesh);
     void print_faces_norm(MyMesh* _mesh);
     void ecart_angulaire(MyMesh* _mesh);
@@ -69,6 +69,7 @@ private slots:
     void on_pushButton_normales_faces_clicked();
     void on_pushButton_normales_points_clicked();
     void on_pushButton_seuls_clicked();
+    void on_pushButton_ecart_angulaire_clicked();
 
 private:
 

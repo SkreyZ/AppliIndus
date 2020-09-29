@@ -38,6 +38,7 @@ public:
     QPushButton *pushButton_normales_points;
     QPushButton *pushButton_normales_faces;
     QPushButton *pushButton_seuls;
+    QPushButton *pushButton_ecart_angulaire;
     QSpacerItem *verticalSpacer;
     QPushButton *pushButton_angleArea;
     MeshViewerWidget *displayWidget;
@@ -105,6 +106,11 @@ public:
 
         verticalLayout->addWidget(pushButton_seuls);
 
+        pushButton_ecart_angulaire = new QPushButton(widget_2);
+        pushButton_ecart_angulaire->setObjectName(QString::fromUtf8("pushButton_ecart_angulaire"));
+
+        verticalLayout->addWidget(pushButton_ecart_angulaire);
+
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout->addItem(verticalSpacer);
@@ -149,6 +155,7 @@ public:
         pushButton_normales_points->setText(QCoreApplication::translate("MainWindow", "Afficher normales des points", nullptr));
         pushButton_normales_faces->setText(QCoreApplication::translate("MainWindow", "Afficher normales des faces", nullptr));
         pushButton_seuls->setText(QCoreApplication::translate("MainWindow", "Test seuls", nullptr));
+        pushButton_ecart_angulaire->setText(QCoreApplication::translate("MainWindow", "Ecart Angulaire", nullptr));
         pushButton_angleArea->setText(QCoreApplication::translate("MainWindow", "Test angles/aires", nullptr));
     } // retranslateUi
 
