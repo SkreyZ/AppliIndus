@@ -52,7 +52,9 @@ public:
     void print_vertices_norm(MyMesh* _mesh);
     void print_faces_norm(MyMesh* _mesh);
     void ecart_angulaire(MyMesh* _mesh);
-
+    int nb_faces_isole(MyMesh* _mesh);
+    int nb_points_isole(MyMesh* _mesh);
+    int nb_aretes_isole(MyMesh* _mesh);
 
     void displayMesh(MyMesh *_mesh, DisplayMode mode = DisplayMode::Normal);
     void resetAllColorsAndThickness(MyMesh* _mesh);

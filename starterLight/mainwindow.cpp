@@ -23,15 +23,11 @@ bool MainWindow::test_lonely_face(MyMesh* _mesh){
 }
 
 bool MainWindow::test_lonely_vertex(MyMesh* _mesh){
-    bool point_seul = true;
-
     for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
-        point_seul = true;
-        for(MyMesh::VertexEdgeIter ve_it = _mesh->ve_iter(*v_it); ve_it.is_valid(); ++ve_it){
-            point_seul = false;
-        }
+        VertexHandle current_vertex = *v_it;
+        if(_mesh->is_isolated(current_vertex)) return true;
     }
-    return point_seul;
+    return false;
 }
 
 bool MainWindow::test_lonely_edge(MyMesh* _mesh){
@@ -39,7 +35,7 @@ bool MainWindow::test_lonely_edge(MyMesh* _mesh){
         EdgeHandle current_edge = *e_it;
         HalfedgeHandle he1 = _mesh->halfedge_handle(current_edge, 0);
         HalfedgeHandle he2 = _mesh->halfedge_handle(current_edge, 1);
-        if(!he1.is_valid() && !he2.is_valid()) return true;
+        if(!_mesh->face_handle(he1).is_valid() && !_mesh->face_handle(he2).is_valid()) return true;
     }
     return false;
 }
@@ -102,8 +98,43 @@ void MainWindow::ecart_angulaire(MyMesh* _mesh){
 
         }
     }
+}
 
+int MainWindow::nb_faces_isole(MyMesh* _mesh){
+    bool face_seule = true;
+    int nb_faces_seules = 0;
 
+    for(MyMesh::FaceIter f_it = _mesh->faces_begin(); f_it != _mesh->faces_end(); ++f_it){
+        face_seule = true;
+        for(MyMesh::FaceFaceIter ff_it = _mesh->ff_iter(*f_it); ff_it.is_valid(); ++ff_it) {
+            face_seule = false;
+        }
+        if(face_seule) nb_faces_seules++;
+    }
+    return nb_faces_seules;
+}
+
+int MainWindow::nb_points_isole(MyMesh* _mesh){
+    int nb_points_seuls = 0;
+
+    for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
+        VertexHandle current_vertex = *v_it;
+        if(_mesh->is_isolated(current_vertex)) nb_points_seuls++;
+    }
+
+    return nb_points_seuls;
+}
+
+int MainWindow::nb_aretes_isole(MyMesh* _mesh){
+    int nb_aretes_seules = 0;
+
+    for(MyMesh::EdgeIter e_it = _mesh->edges_begin(); e_it != _mesh->edges_end(); ++e_it){
+        EdgeHandle current_edge = *e_it;
+        HalfedgeHandle he1 = _mesh->halfedge_handle(current_edge, 0);
+        HalfedgeHandle he2 = _mesh->halfedge_handle(current_edge, 1);
+        if(!_mesh->face_handle(he1).is_valid() && !_mesh->face_handle(he2).is_valid()) nb_aretes_seules++;
+    }
+    return nb_aretes_seules;
 }
 
 /* **** fin de la partie à compléter **** */
@@ -126,9 +157,9 @@ void MainWindow::on_pushButton_normales_points_clicked(){
 
 void MainWindow::on_pushButton_seuls_clicked(){
 //    qDebug() << __FUNCTION__;
-    qDebug() << "Face seule : " << test_lonely_face(&mesh);
-    qDebug() << "Point seul : " << test_lonely_vertex(&mesh);
-    qDebug() << "Arete seule : " << test_lonely_edge(&mesh);
+    qDebug() << "Face seule : " << test_lonely_face(&mesh) << ": il y a : " << nb_faces_isole(&mesh) << " faces seules";
+    qDebug() << "Point seul : " << test_lonely_vertex(&mesh) << ": il y a : " << nb_points_isole(&mesh) << " points seuls";
+    qDebug() << "Arete seule : " << test_lonely_edge(&mesh) << ": il y a : " << nb_aretes_isole(&mesh) << " aretes seules";
 }
 
 void MainWindow::on_pushButton_H_clicked()
