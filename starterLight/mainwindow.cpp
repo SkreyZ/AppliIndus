@@ -69,8 +69,9 @@ void MainWindow::print_faces_norm(MyMesh *_mesh){
     }
 }
 
-float* MainWindow::vertex_norm(MyMesh *_mesh, MyMesh::VertexHandle vertex){
+std::vector<float> MainWindow::vertex_norm(MyMesh *_mesh, MyMesh::VertexHandle vertex, std::vector<float>* normale){
     int i=0;
+
     float *norm = new float[3];
     norm[0] = 0; norm[1] = 0; norm[2] = 0;
 
@@ -82,46 +83,76 @@ float* MainWindow::vertex_norm(MyMesh *_mesh, MyMesh::VertexHandle vertex){
     }
     norm[0] /= i; norm[1] /= i; norm[2] /= i;
 
-    return norm;
+    for(int i = 0; i<3 ; ++i){
+        normale->push_back(norm[0]);
+    }
+
+    return *normale;
 }
 
 void MainWindow::print_vertices_norm(MyMesh *_mesh){
-    float *norm = new float[3];
+    std::vector<float> norm;
     for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
-        norm = vertex_norm(_mesh, *v_it);
+        vertex_norm(_mesh, *v_it, &norm);
         qDebug() << "Normale point n°" << v_it->idx() << " : " << norm[0] << "," << norm[1] << "," << norm[2];
     }
 }
 
-float MainWindow::angleEE(MyMesh* _mesh, int vertexID,  int faceID)
-{
-    return 0.0;
+void MainWindow::ecart_angulaire(MyMesh* _mesh){
+    std::vector<float> vertex_normale;
+    MyMesh::Normal face_normale;
+
+
+    for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
+        vertex_norm(_mesh, *v_it, &vertex_normale);
+        for(MyMesh::VertexFaceIter vf_it = _mesh->vf_iter(*v_it); vf_it.is_valid(); ++vf_it){
+            face_normale = face_norm(_mesh, *vf_it);
+
+            //Comparer ici la normale du vertex et celles des faces autours.
+
+
+        }
+    }
+
+
 }
 
-void MainWindow::H_Curv(MyMesh* _mesh)
-{
-    /* **** à compléter ! **** */
-}
-
-void MainWindow::K_Curv(MyMesh* _mesh)
-{
-    /* **** à compléter ! **** */
-}
 /* **** fin de la partie à compléter **** */
 
-
-
 /* **** début de la partie boutons et IHM **** */
+void MainWindow::on_pushButton_Affiche_Carac_clicked(){
+   qDebug() << __FUNCTION__;
+   get_carac(&mesh);
+   qDebug() << "Affiche Caractéristiques clicked";
+}
+
+void MainWindow::on_pushButton_normales_faces_clicked(){
+    qDebug() << __FUNCTION__;
+    print_faces_norm(&mesh);
+}
+
+void MainWindow::on_pushButton_normales_points_clicked(){
+    qDebug() << __FUNCTION__;
+    print_vertices_norm(&mesh);
+}
+
+void MainWindow::on_pushButton_seuls_clicked(){
+    qDebug() << __FUNCTION__;
+    qDebug() << "Face seule : " << test_lonely_face(&mesh);
+    qDebug() << "Point seul : " << test_lonely_vertex(&mesh);
+    qDebug() << "Arete seule : " << test_lonely_edge(&mesh);
+}
+
 void MainWindow::on_pushButton_H_clicked()
 {
-    H_Curv(&mesh);
-    displayMesh(&mesh, DisplayMode::TemperatureMap); // permet de passer en mode "carte de temperatures", avec une gestion automatique de la couleur (voir exemple)
+//    H_Curv(&mesh);
+//    displayMesh(&mesh, DisplayMode::TemperatureMap); // permet de passer en mode "carte de temperatures", avec une gestion automatique de la couleur (voir exemple)
 }
 
 void MainWindow::on_pushButton_K_clicked()
 {
-    K_Curv(&mesh);
-    displayMesh(&mesh, DisplayMode::TemperatureMap); // permet de passer en mode "carte de temperatures", avec une gestion automatique de la couleur (voir exemple)
+//    K_Curv(&mesh);
+//    displayMesh(&mesh, DisplayMode::TemperatureMap); // permet de passer en mode "carte de temperatures", avec une gestion automatique de la couleur (voir exemple)
 }
 
 /*  Cette fonction est à utiliser UNIQUEMENT avec le fichier testAngleArea.obj
@@ -141,8 +172,6 @@ void MainWindow::on_pushButton_angleArea_clicked()
 //    qDebug() << "Angle entre les faces 0 et 1 :" << angleFF(&mesh, 0, 1, 1, 2);
 //    qDebug() << "Angle entre les faces 1 et 0 :" << angleFF(&mesh, 1, 0, 1, 2);
 
-    qDebug() << "AngleEE au sommet 1 sur la face 0 :" << angleEE(&mesh, 1, 0);
-    qDebug() << "AngleEE au sommet 3 sur la face 1 :" << angleEE(&mesh, 3, 1);
 }
 
 void MainWindow::on_pushButton_chargement_clicked()
@@ -160,13 +189,6 @@ void MainWindow::on_pushButton_chargement_clicked()
 
     // on affiche le maillage
     displayMesh(&mesh);
-    get_carac(&mesh);
-    qDebug() << "Face seule : " << test_lonely_face(&mesh);
-    qDebug() << "Point seul : " << test_lonely_vertex(&mesh);
-    qDebug() << "Arete seule : " << test_lonely_edge(&mesh);
-
-    print_vertices_norm(&mesh);
-    print_faces_norm(&mesh);
 }
 /* **** fin de la partie boutons et IHM **** */
 

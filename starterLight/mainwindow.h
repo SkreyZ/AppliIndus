@@ -49,14 +49,11 @@ public:
     bool test_lonely_edge(MyMesh* _mesh);
     float donnee_mesh(MyMesh* _mesh);
     MyMesh::Normal face_norm(MyMesh* _mesh, MyMesh::FaceHandle face);
-    float* vertex_norm(MyMesh* _mesh, MyMesh::VertexHandle vertex);
+    std::vector<float> vertex_norm(MyMesh* _mesh, MyMesh::VertexHandle vertex, std::vector<float>* normale);
     void print_vertices_norm(MyMesh* _mesh);
     void print_faces_norm(MyMesh* _mesh);
-    float Ai(MyMesh*, int vertexID);
-    float angleFF(MyMesh *_mesh, int faceID0, int faceID1, int vertID0, int vertID1);
-    float angleEE(MyMesh* _mesh, int vertexID, int faceID);
-    void H_Curv(MyMesh* _mesh);
-    void K_Curv(MyMesh* _mesh);
+    void ecart_angulaire(MyMesh* _mesh);
+
 
     void displayMesh(MyMesh *_mesh, DisplayMode mode = DisplayMode::Normal);
     void resetAllColorsAndThickness(MyMesh* _mesh);
@@ -67,6 +64,10 @@ private slots:
     void on_pushButton_angleArea_clicked();
     void on_pushButton_H_clicked();
     void on_pushButton_K_clicked();
+    void on_pushButton_Affiche_Carac_clicked();
+    void on_pushButton_normales_faces_clicked();
+    void on_pushButton_normales_points_clicked();
+    void on_pushButton_seuls_clicked();
 
 private:
 
