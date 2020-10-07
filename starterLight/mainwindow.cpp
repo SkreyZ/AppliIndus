@@ -10,6 +10,7 @@ void MainWindow::get_carac(MyMesh* _mesh){
     qDebug() << "Is triangle" << _mesh->is_triangles();
 }
 
+//test si il y a la présence d'une face isolée.
 bool MainWindow::test_lonely_face(MyMesh* _mesh){
     bool face_seule = true;
 
@@ -22,6 +23,7 @@ bool MainWindow::test_lonely_face(MyMesh* _mesh){
     return face_seule;
 }
 
+//test si il y a la présence d'un points isolé
 bool MainWindow::test_lonely_vertex(MyMesh* _mesh){
     for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
         VertexHandle current_vertex = *v_it;
@@ -30,6 +32,7 @@ bool MainWindow::test_lonely_vertex(MyMesh* _mesh){
     return false;
 }
 
+//test si il y a la présence d'une arete isolé.
 bool MainWindow::test_lonely_edge(MyMesh* _mesh){
     for(MyMesh::EdgeIter e_it = _mesh->edges_begin(); e_it != _mesh->edges_end(); ++e_it){
         EdgeHandle current_edge = *e_it;
@@ -54,20 +57,12 @@ void MainWindow::print_faces_norm(MyMesh *_mesh){
     }
 }
 
+//Renvoit la normale d'un point.
 MyMesh::Normal MainWindow::vertex_norm(MyMesh *_mesh, MyMesh::VertexHandle vertex){
-    int i=0;
-    MyMesh::Normal normale;
-
-    for(MyMesh::VertexFaceIter vf_it = _mesh->vf_iter(vertex); vf_it.is_valid(); ++vf_it){
-        i++;
-        FaceHandle face = *vf_it;
-        MyMesh::Normal normal = face_norm(_mesh, face);
-        normale[0] += normal[0]; normale[1] += normal[1]; normale[2] += normal[2];
-    }
-    normale[0] /= i; normale[1] /= i; normale[2] /= i;
-    return normale;
+    return _mesh->calc_vertex_normal(vertex);
 }
 
+//affiche toutes les normales de tous les points.
 void MainWindow::print_vertices_norm(MyMesh *_mesh){
     MyMesh::Normal normale;
     for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
@@ -76,24 +71,17 @@ void MainWindow::print_vertices_norm(MyMesh *_mesh){
     }
 }
 
+//Calcule l'ecart angulaire pour chaque point.
 void MainWindow::ecart_angulaire(MyMesh* _mesh){
-    MyMesh::Normal vertex_normal;
-    MyMesh::Normal face_normal;
-    float current_angle = 0;
-
-    for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
-        current_angle = 0;
-        vertex_normal = vertex_norm(_mesh, *v_it);
+    for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it) {
+        float current_angle = 0.0;
+        MyMesh::Normal face_normal;
+        MyMesh::Normal vertex_normal = _mesh->calc_vertex_normal(*v_it);
         for(MyMesh::VertexFaceIter vf_it = _mesh->vf_iter(*v_it); vf_it.is_valid(); ++vf_it){
-            face_normal = face_norm(_mesh, *vf_it);
-
-            //Comparer ici la normale du vertex et celles des faces autours.
-            //Calculer les angles entres la normale du points et de toutes ses faces adjacentes ==> mémoriser l'angle le plus grand parmi tous.
+            face_normal = _mesh->calc_face_normal(*vf_it);
             float norm_Vertex_Normal = sqrt(pow(vertex_normal[0],2) + pow(vertex_normal[1],2) + pow(vertex_normal[2],2));
             float norm_Face_Normal = sqrt(pow(face_normal[0],2) + pow(face_normal[1],2) + pow(face_normal[2],2));
             float prod_scalaire = dot(vertex_normal,face_normal);
-
-            /*u.v = ||u|| . ||v|| . cos(alpha)*/
             float new_angle = acos(prod_scalaire/(norm_Vertex_Normal*norm_Face_Normal));
             if(new_angle > current_angle) current_angle = new_angle;
         }
