@@ -5,15 +5,87 @@
 
 
 /* **** début de la partie à compléter **** */
-void MainWindow::affiche_carac(MyMesh* _mesh){
+void MainWindow::get_carac(MyMesh* _mesh){
     qDebug() << "Nombre de sommets "<< _mesh->n_vertices();
     qDebug() << "Nombre de faces :" << _mesh->n_faces();
 }
 
-float MainWindow::centre_gravite(MyMesh* _mesh)
+float MainWindow::donnee_mesh(MyMesh* _mesh)
 {
 
     return 0.0;
+}
+
+bool MainWindow::test_lonely_face(MyMesh* _mesh){
+    bool face_seule = true;
+
+    for(MyMesh::FaceIter f_it = _mesh->faces_begin(); f_it != _mesh->faces_end(); ++f_it){
+        face_seule = true;
+        for(MyMesh::FaceFaceIter ff_it = _mesh->ff_iter(*f_it); ff_it.is_valid(); ++ff_it) {
+            face_seule = false;
+        }
+    }
+    return face_seule;
+}
+
+bool MainWindow::test_lonely_vertex(MyMesh* _mesh){
+    bool point_seul = true;
+
+    for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
+        point_seul = true;
+        for(MyMesh::VertexEdgeIter ve_it = _mesh->ve_iter(*v_it); ve_it.is_valid(); ++ve_it){
+            point_seul = false;
+        }
+    }
+    return point_seul;
+}
+
+bool MainWindow::test_lonely_edge(MyMesh* _mesh){
+    for(MyMesh::EdgeIter e_it = _mesh->edges_begin(); e_it != _mesh->edges_end(); ++e_it){
+        EdgeHandle current_edge = *e_it;
+        HalfedgeHandle he1 = _mesh->halfedge_handle(current_edge, 0);
+        HalfedgeHandle he2 = _mesh->halfedge_handle(current_edge, 1);
+        if(!he1.is_valid() && !he2.is_valid()) return true;
+    }
+    return false;
+}
+
+//Calcule la normale d'une face
+MyMesh::Normal MainWindow::face_norm(MyMesh *_mesh, MyMesh::FaceHandle face){
+    return _mesh->calc_face_normal(face);
+}
+
+// Affiche la normale de toute les faces
+void MainWindow::print_faces_norm(MyMesh *_mesh){
+    MyMesh::Normal normal;
+    for(MyMesh::FaceIter f_it = _mesh->faces_begin(); f_it != _mesh->faces_end(); ++f_it){
+        normal = face_norm(_mesh, *f_it);
+        qDebug() << "Normale face n°" << f_it->idx() << " : " << normal[0] << "," << normal[1] << "," << normal[2];
+    }
+}
+
+float* MainWindow::vertex_norm(MyMesh *_mesh, MyMesh::VertexHandle vertex){
+    int i=0;
+    float *norm = new float[3];
+    norm[0] = 0; norm[1] = 0; norm[2] = 0;
+
+    for(MyMesh::VertexFaceIter vf_it = _mesh->vf_iter(vertex); vf_it.is_valid(); ++vf_it){
+        i++;
+        FaceHandle face = *vf_it;
+        MyMesh::Normal normal = face_norm(_mesh, face);
+        norm[0] += normal[0]; norm[1] += normal[1]; norm[2] += normal[2];
+    }
+    norm[0] /= i; norm[1] /= i; norm[2] /= i;
+
+    return norm;
+}
+
+void MainWindow::print_vertices_norm(MyMesh *_mesh){
+    float *norm = new float[3];
+    for(MyMesh::VertexIter v_it = _mesh->vertices_begin(); v_it != _mesh->vertices_end(); ++v_it){
+        norm = vertex_norm(_mesh, *v_it);
+        qDebug() << "Normale point n°" << v_it->idx() << " : " << norm[0] << "," << norm[1] << "," << norm[2];
+    }
 }
 
 float MainWindow::angleEE(MyMesh* _mesh, int vertexID,  int faceID)
@@ -173,7 +245,6 @@ void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
     AngleEE au sommet 1 sur la face 0 : 0.785398 */
 void MainWindow::on_pushButton_angleArea_clicked()
 {
-    qDebug() << "Le centre de gravité est :" << centre_gravite(&mesh);
 
 //    qDebug() << "Angle entre les faces 0 et 1 :" << angleFF(&mesh, 0, 1, 1, 2);
 //    qDebug() << "Angle entre les faces 1 et 0 :" << angleFF(&mesh, 1, 0, 1, 2);
@@ -195,7 +266,13 @@ void MainWindow::on_pushButton_chargement_clicked()
 
     // on affiche le maillage
     displayMesh(&mesh);
-    affiche_carac(&mesh);
+    get_carac(&mesh);
+    qDebug() << "Face seule : " << test_lonely_face(&mesh);
+    qDebug() << "Point seul : " << test_lonely_vertex(&mesh);
+    qDebug() << "Arete seule : " << test_lonely_edge(&mesh);
+
+    print_vertices_norm(&mesh);
+    print_faces_norm(&mesh);
 }
 /* **** fin de la partie boutons et IHM **** */
 

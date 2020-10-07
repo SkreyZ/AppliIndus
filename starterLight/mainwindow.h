@@ -46,8 +46,16 @@ public:
     // les fonctions à compléter
     void affiche_carac(MyMesh* _mesh);
     void show_vf_list(MyMesh* _mesh);
+    void get_carac(MyMesh* _mesh);
     bool onlyTriangles(MyMesh* _mesh);
-    float centre_gravite(MyMesh* _mesh);
+    bool test_lonely_face(MyMesh* _mesh);
+    bool test_lonely_vertex(MyMesh* _mesh);
+    bool test_lonely_edge(MyMesh* _mesh);
+    float donnee_mesh(MyMesh* _mesh);
+    MyMesh::Normal face_norm(MyMesh* _mesh, MyMesh::FaceHandle face);
+    float* vertex_norm(MyMesh* _mesh, MyMesh::VertexHandle vertex);
+    void print_vertices_norm(MyMesh* _mesh);
+    void print_faces_norm(MyMesh* _mesh);
     float Ai(MyMesh*, int vertexID);
     float angleFF(MyMesh *_mesh, int faceID0, int faceID1, int vertID0, int vertID1);
     float angleEE(MyMesh* _mesh, int vertexID, int faceID);
