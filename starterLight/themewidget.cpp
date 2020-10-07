@@ -265,6 +265,20 @@ QChart *ThemeWidget::createLineChart() const
     return chart;
 }
 
+void ThemeWidget::setDataPieChartElements(QChart *chart, QPieSeries *series){
+
+    QPieSeries *series = new QPieSeries(chart);
+    for (const Data &data : m_dataTable[0]) {
+        QPieSlice *slice = series->append(data.second, data.first.y());
+        if (data == m_dataTable[0].first()) {
+            // Show the first slice exploded with label
+            slice->setLabelVisible();
+            slice->setExploded();
+            slice->setExplodeDistanceFactor(0.5);
+        }
+    }
+}
+
 QChart *ThemeWidget::createPieChart() const
 {
     QChart *chart = new QChart();

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>632</width>
+    <width>668</width>
     <height>408</height>
    </rect>
   </property>
@@ -69,6 +69,20 @@
         <widget class="QPushButton" name="pushButton_K">
          <property name="text">
           <string>Courbure Gaussienne</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>TextLabel</string>
          </property>
         </widget>
        </item>
@@ -155,7 +169,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>632</width>
+     <width>668</width>
      <height>22</height>
     </rect>
    </property>

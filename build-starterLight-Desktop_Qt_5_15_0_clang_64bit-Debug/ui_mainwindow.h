@@ -13,6 +13,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
@@ -36,6 +37,8 @@ public:
     QPushButton *pushButton_chargement;
     QPushButton *pushButton_H;
     QPushButton *pushButton_K;
+    QLabel *label;
+    QLabel *label_2;
     QSpacerItem *verticalSpacer;
     QLineEdit *lineEdit;
     QDoubleSpinBox *doubleSpinBox;
@@ -52,7 +55,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(632, 408);
+        MainWindow->resize(668, 408);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
@@ -87,6 +90,16 @@ public:
         pushButton_K->setObjectName(QString::fromUtf8("pushButton_K"));
 
         verticalLayout->addWidget(pushButton_K);
+
+        label = new QLabel(widget_2);
+        label->setObjectName(QString::fromUtf8("label"));
+
+        verticalLayout->addWidget(label);
+
+        label_2 = new QLabel(widget_2);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        verticalLayout->addWidget(label_2);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -141,7 +154,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 632, 22));
+        menuBar->setGeometry(QRect(0, 0, 668, 22));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -161,6 +174,8 @@ public:
         pushButton_chargement->setText(QCoreApplication::translate("MainWindow", "Charger OBJ", nullptr));
         pushButton_H->setText(QCoreApplication::translate("MainWindow", "Courbure Moyenne", nullptr));
         pushButton_K->setText(QCoreApplication::translate("MainWindow", "Courbure Gaussienne", nullptr));
+        label->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
+        label_2->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
         lineEdit->setText(QCoreApplication::translate("MainWindow", "Marge erreur", nullptr));
 #if QT_CONFIG(accessibility)
         doubleSpinBox->setAccessibleName(QString());

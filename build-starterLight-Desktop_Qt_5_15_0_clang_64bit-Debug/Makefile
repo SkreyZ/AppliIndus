@@ -1126,7 +1126,8 @@ mainwindow.o: ../starterLight/mainwindow.cpp ../starterLight/mainwindow.h \
 		/Users/eliasmunoz/Qt/5.15.0/clang_64/lib/QtGui.framework/Headers/qevent.h \
 		/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h \
 		/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Headers/glu.h \
-		/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Headers/glext.h
+		/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Headers/glext.h \
+		../starterLight/themewidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../starterLight/mainwindow.cpp
 
 meshviewerwidget.o: ../starterLight/meshviewerwidget.cpp ../starterLight/meshviewerwidget.h \

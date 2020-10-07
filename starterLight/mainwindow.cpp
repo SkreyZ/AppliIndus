@@ -430,7 +430,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     vertexSelection = -1;
     edgeSelection = -1;
     faceSelection = -1;
-
+    this->
     modevoisinage = false;
 
     ui->setupUi(this);

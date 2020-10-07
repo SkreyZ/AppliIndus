@@ -72,6 +72,10 @@ private:
     QChart *createLineChart() const;
     QChart *createSplineChart() const;
     QChart *createScatterChart() const;
+    QChart *PieChartElements();
+    QChart *PieChartFaces();
+    QChart *BarChartIsolated();
+    void setDataBarChart();
 
 private:
     int m_listCount;
